@@ -1,0 +1,20 @@
+{
+  "name": "clone-tabnews",
+  "version": "1.0.0",
+  "description": "Implementação do tabnews para o curso.dev",
+  "homepage": "https://github.com/pedrohgceolin/clone-tabnews#readme",
+  "bugs": {
+    "url": "https://github.com/pedrohgceolin/clone-tabnews/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrohgceolin/clone-tabnews.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
