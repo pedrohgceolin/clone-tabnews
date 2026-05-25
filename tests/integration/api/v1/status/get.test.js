@@ -8,11 +8,14 @@ test("GET to /api/v1/status should return 200", async () => {
   expect(responseBody.updated_at).toEqual(parseUpdatedAt);
 
   expect(responseBody.postgres_version).toBeDefined();
+  expect(responseBody.postgres_version).toEqual("16.0");
   console.log(responseBody.postgres_version);
 
   expect(responseBody.max_connections).toBeDefined();
+  expect(responseBody.max_connections).toEqual(100);
   console.log(responseBody.max_connections);
 
   expect(responseBody.used_connections).toBeDefined();
+  expect(responseBody.used_connections).toEqual(1);
   console.log(responseBody.used_connections);
 });
