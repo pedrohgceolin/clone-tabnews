@@ -20,13 +20,14 @@
     "services:stop": "docker compose -f infra/compose.yaml stop",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
-    "test": "jest",
-    "test:watch": "jest --watchAll",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watchAll  --runInBand",
     "migration:create": "node-pg-migrate -m infra/migration create",
     "migration:up": "node-pg-migrate -m infra/migration --envPath .env.development up"
   },
   "dependencies": {
     "dotenv": "^16.4.4",
+    "dotenv-expand": "^11.0.6",
     "next": "^16.2.3",
     "node-pg-migrate": "^6.2.2",
     "pg": "^8.11.3",
