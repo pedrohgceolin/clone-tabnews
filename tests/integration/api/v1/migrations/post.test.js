@@ -10,7 +10,6 @@ test("POST to /api/v1/migrations should return 200", async () => {
     method: "POST",
   });
   expect(response.status).toBe(201);
-  console.log("Uma pequena mudanca");
 
   const responseBody = await response.json();
 
