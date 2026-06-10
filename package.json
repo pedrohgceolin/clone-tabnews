@@ -20,7 +20,7 @@
     "services:stop": "docker compose -f infra/compose.yaml stop",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
-    "test": "npm run services:up && concurrently -n next,jest --hide next -k --success command-jest \"next dev\" \"jest --runInBand --verbose\"",
+    "test": "npm run services:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand --verbose\"",
     "test:watch": "jest --watchAll  --runInBand",
     "migration:create": "node-pg-migrate -m infra/migration create",
     "migration:up": "node-pg-migrate -m infra/migration --envPath .env.development up",
