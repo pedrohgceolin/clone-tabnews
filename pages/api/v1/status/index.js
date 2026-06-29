@@ -1,7 +1,21 @@
+import { createRouter } from "next-connect";
 import database from "infra/database.js";
-import { InternalServerError } from "infra/errors.js";
+import { InternalServerError, MethodNotAllowedError } from "infra/errors.js";
 
-async function status(request, response) {
+const router = createRouter();
+
+router.get(getHandler);
+
+export default router.handler({
+  onNoMatch: onNoMatchhandler,
+});
+
+function onNoMatchhandler(request, response) {
+  const publicErrorObject = new MethodNotAllowedError();
+  response.status(publicErrorObject.statusCode).json(publicErrorObject);
+}
+
+async function getHandler(request, response) {
   try {
     const updatedAt = new Date().toISOString();
     const postgresVersion = await database.query("SHOW server_version;");
@@ -31,5 +45,3 @@ async function status(request, response) {
     response.status(500).json({ publicErrorObject });
   }
 }
-
-export default status;
