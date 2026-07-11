@@ -12,12 +12,12 @@ router.post(postHandler);
 export default router.handler(controller.errorHandlers);
 
 const defaultMigrationOptions = {
-      dryRun: true,
-      dir: resolve("infra", "migration"),
-      direction: "up",
-      verbose: true,
-      migrationsTable: "pgmigrations",
-    };
+  dryRun: true,
+  dir: resolve("infra", "migration"),
+  direction: "up",
+  verbose: true,
+  migrationsTable: "pgmigrations",
+};
 
 async function getHandler(request, response) {
   let dbClient;

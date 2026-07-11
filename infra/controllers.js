@@ -7,20 +7,20 @@ function onNoMatchhandler(request, response) {
 
 function onErrorHandler(error, request, response) {
   const publicErrorObject = new InternalServerError({
-    statusCode : error.statusCode,
+    statusCode: error.statusCode,
     cause: error,
   });
-  
+
   console.log(publicErrorObject);
 
   response.status(publicErrorObject.statusCode).json({ publicErrorObject });
 }
 
 const controller = {
-    errorHandlers: {
-        onNoMatch: onNoMatchhandler,
-        onError: onErrorHandler,
-    }
+  errorHandlers: {
+    onNoMatch: onNoMatchhandler,
+    onError: onErrorHandler,
+  },
 };
 
 export default controller;

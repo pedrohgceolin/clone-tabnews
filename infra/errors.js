@@ -1,5 +1,5 @@
 export class InternalServerError extends Error {
-  constructor({ cause, statusCode}) {
+  constructor({ cause, statusCode }) {
     super("Um erro interno não esperado aconteceu.", {
       cause,
     });
@@ -37,7 +37,7 @@ export class MethodNotAllowedError extends Error {
 }
 
 export class ServiceError extends Error {
-  constructor({ cause, message}) {
+  constructor({ cause, message }) {
     super(message || "Serviço indisponível no momento.", {
       cause,
     });
