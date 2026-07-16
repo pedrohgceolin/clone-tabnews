@@ -10,25 +10,22 @@ beforeAll(async () => {
 describe("POST /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With exact case match", async () => {
-      const response1 = await fetch(
-        "http://localhost:3000/api/v1/users",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            username: "MesmoCase",
-            email: 'MesmoCase@gmail.com',
-            password: 'senha',
-          })
+      const response1 = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          username: "MesmoCase",
+          email: "MesmoCase@gmail.com",
+          password: "senha",
+        }),
+      });
 
       expect(response1.status).toBe(201);
 
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/users/MesmoCase"
+        "http://localhost:3000/api/v1/users/MesmoCase",
       );
 
       expect(response2.status).toBe(200);
@@ -37,9 +34,9 @@ describe("POST /api/v1/users/[username]", () => {
 
       expect(response2Body).toEqual({
         id: response2Body.id,
-        username: 'MesmoCase',
-        email: 'MesmoCase@gmail.com',
-        password: 'senha',
+        username: "MesmoCase",
+        email: "MesmoCase@gmail.com",
+        password: "senha",
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,
       });
@@ -49,25 +46,22 @@ describe("POST /api/v1/users/[username]", () => {
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
     });
     test("With case mismatch", async () => {
-      const response1 = await fetch(
-        "http://localhost:3000/api/v1/users",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            username: "CaseDiferente",
-            email: 'case.diferente@gmail.com',
-            password: 'senha',
-          })
+      const response1 = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          username: "CaseDiferente",
+          email: "case.diferente@gmail.com",
+          password: "senha",
+        }),
+      });
 
       expect(response1.status).toBe(201);
 
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/users/casediferente"
+        "http://localhost:3000/api/v1/users/casediferente",
       );
 
       expect(response2.status).toBe(200);
@@ -76,9 +70,9 @@ describe("POST /api/v1/users/[username]", () => {
 
       expect(response2Body).toEqual({
         id: response2Body.id,
-        username: 'CaseDiferente',
-        email: 'case.diferente@gmail.com',
-        password: 'senha',
+        username: "CaseDiferente",
+        email: "case.diferente@gmail.com",
+        password: "senha",
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,
       });
@@ -88,9 +82,8 @@ describe("POST /api/v1/users/[username]", () => {
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
     });
     test("With nonexistent username", async () => {
-      
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/usuarionaoexistente"
+        "http://localhost:3000/api/v1/users/usuarionaoexistente",
       );
 
       expect(response.status).toBe(404);
@@ -99,7 +92,7 @@ describe("POST /api/v1/users/[username]", () => {
 
       expect(responseBody).toEqual({
         name: "NotFoundError",
-        message:"O username informado não foi encontrado no sistema.",
+        message: "O username informado não foi encontrado no sistema.",
         action: "Verifique se o username está digitado corretamente",
         status_code: 404,
       });

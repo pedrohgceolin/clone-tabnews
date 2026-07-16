@@ -1,14 +1,14 @@
-import database from "infra/database.js"
+import database from "infra/database.js";
 import { ValidationError, NotFoundError } from "infra/errors.js";
 
-async function findOneByUsername(username){
-    const userFound = await runSelectQuery(username);
+async function findOneByUsername(username) {
+  const userFound = await runSelectQuery(username);
 
-    return userFound;
+  return userFound;
 
-    async function runSelectQuery(username){
-        const results = await database.query({
-          text:`
+  async function runSelectQuery(username) {
+    const results = await database.query({
+      text: `
             SELECT 
                 *
             FROM
@@ -18,30 +18,30 @@ async function findOneByUsername(username){
             LIMIT
                 1
             ;`,
-          values: [username],
-        });
-        
-        if (results.rowCount === 0){
-            throw new NotFoundError({
-                message:"O username informado não foi encontrado no sistema.", 
-                action: "Verifique se o username está digitado corretamente",
-            });
-        }
+      values: [username],
+    });
 
-        return results.rows[0];
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O username informado não foi encontrado no sistema.",
+        action: "Verifique se o username está digitado corretamente",
+      });
     }
+
+    return results.rows[0];
+  }
 }
 
-async function create(userInputValues){
-    await validateUniqueEmail(userInputValues.email);
-    await validateUniqueUsername(userInputValues.username);
+async function create(userInputValues) {
+  await validateUniqueEmail(userInputValues.email);
+  await validateUniqueUsername(userInputValues.username);
 
-    const newUser = await runInsertQuery(userInputValues)
-    return newUser;
+  const newUser = await runInsertQuery(userInputValues);
+  return newUser;
 
-    async function validateUniqueEmail(email){
-        const results = await database.query({
-          text:`
+  async function validateUniqueEmail(email) {
+    const results = await database.query({
+      text: `
             SELECT 
                 email 
             FROM
@@ -49,20 +49,20 @@ async function create(userInputValues){
             WHERE
                 LOWER(email) = LOWER($1)
             ;`,
-          values: [email],
-        });
-        
-        if (results.rowCount > 0){
-            throw new ValidationError({
-                message: "o email informado já está sendo utilizado",
-                action: "Utilize outro email para realizar o cadastro."
-            });
-        }
-    }
+      values: [email],
+    });
 
-    async function validateUniqueUsername(username){
-        const results = await database.query({
-          text:`
+    if (results.rowCount > 0) {
+      throw new ValidationError({
+        message: "o email informado já está sendo utilizado",
+        action: "Utilize outro email para realizar o cadastro.",
+      });
+    }
+  }
+
+  async function validateUniqueUsername(username) {
+    const results = await database.query({
+      text: `
             SELECT 
                 username 
             FROM
@@ -70,20 +70,20 @@ async function create(userInputValues){
             WHERE
                 LOWER(username) = LOWER($1)
             ;`,
-          values: [username],
-        });
-        
-        if (results.rowCount > 0){
-            throw new ValidationError({
-                message: "O nome de usuário informado já está sendo utilizado",
-                action: "Utilize outro nome de usuário para realizar o cadastro."
-            });
-        }
-    }
+      values: [username],
+    });
 
-    async function runInsertQuery(userInputValues) {
-        const results = await database.query({
-          text:`
+    if (results.rowCount > 0) {
+      throw new ValidationError({
+        message: "O nome de usuário informado já está sendo utilizado",
+        action: "Utilize outro nome de usuário para realizar o cadastro.",
+      });
+    }
+  }
+
+  async function runInsertQuery(userInputValues) {
+    const results = await database.query({
+      text: `
             INSERT INTO 
                 users (username, email, password) 
             VALUES 
@@ -91,19 +91,19 @@ async function create(userInputValues){
             RETURNING
                 *
             ;`,
-          values: [
-            userInputValues.username,
-            userInputValues.email,
-            userInputValues.password
-            ],
-        });
-        return results.rows[0];
-    }
+      values: [
+        userInputValues.username,
+        userInputValues.email,
+        userInputValues.password,
+      ],
+    });
+    return results.rows[0];
+  }
 }
 
 const user = {
-    create,
-    findOneByUsername,
-}
+  create,
+  findOneByUsername,
+};
 
 export default user;
