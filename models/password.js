@@ -1,21 +1,37 @@
+import { InternalServerError } from "infra/errors.js";
 import bcryptjs from "bcryptjs";
 
-async function hash(password){
-    const rounds = getNumberofRounds();
-    return await bcryptjs.hash(password, rounds)
+async function hash(password) {
+  const rounds = getNumberofRounds();
+
+  const passwordWithPepper = password + (await getPepper());
+  return await bcryptjs.hash(passwordWithPepper, rounds);
 }
 
-function getNumberofRounds(){
-    return process.env.NODE_ENV === "production" ? 14 : 1;
+async function getPepper() {
+  const pepper = process.env.PASSWORD_PEPPER;
+  if (pepper === undefined) {
+    throw new InternalServerError({
+      cause: "Pepper não definida",
+    });
+  }
+  return pepper;
 }
 
-async function compare(providePassword, storePassword){
-    return await bcryptjs.compare(providePassword, storePassword);
+function getNumberofRounds() {
+  return process.env.NODE_ENV === "production" ? 14 : 1;
+}
+
+async function compare(providedPassword, storedPassword) {
+  return await bcryptjs.compare(
+    providedPassword + (await getPepper()),
+    storedPassword,
+  );
 }
 
 const password = {
-    hash,
-    compare
-}
+  hash,
+  compare,
+};
 
 export default password;
