@@ -11,9 +11,9 @@ describe("POST /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With exact case match", async () => {
       await orchestrator.createUser({
-          username: "MesmoCase",
-          email: "MesmoCase@gmail.com",
-          password: "senha",
+        username: "MesmoCase",
+        email: "MesmoCase@gmail.com",
+        password: "senha",
       });
 
       const response2 = await fetch(
@@ -39,9 +39,9 @@ describe("POST /api/v1/users/[username]", () => {
     });
     test("With case mismatch", async () => {
       await orchestrator.createUser({
-          username: "CaseDiferente",
-          email: "case.diferente@gmail.com",
-          password: "senha",
+        username: "CaseDiferente",
+        email: "case.diferente@gmail.com",
+        password: "senha",
       });
 
       const response2 = await fetch(
