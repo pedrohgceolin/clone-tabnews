@@ -3,7 +3,11 @@ import bcryptjs from "bcryptjs";
 
 async function hash(password) {
   const rounds = getNumberofRounds();
-
+  if (password === undefined) {
+    throw new InternalServerError({
+      cause: "Senha não definida",
+    });
+  }
   const passwordWithPepper = password + (await getPepper());
   return await bcryptjs.hash(passwordWithPepper, rounds);
 }
