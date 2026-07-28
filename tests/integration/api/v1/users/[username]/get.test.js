@@ -7,7 +7,7 @@ beforeAll(async () => {
   await orchestrator.runPendingMigrations();
 });
 
-describe("POST /api/v1/users/[username]", () => {
+describe("GET /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With exact case match", async () => {
       await orchestrator.createUser({
