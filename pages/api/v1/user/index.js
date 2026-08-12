@@ -2,10 +2,13 @@ import { createRouter } from "next-connect";
 import controller from "infra/controllers.js";
 import user from "models/users.js";
 import session from "models/session.js";
+import authorization from "models/authorization";
+import { ForbiddenError } from "infra/errors.js";
 
 const router = createRouter();
 
-router.get(getHandler);
+router.use(controller.injectAnonymousOrUser);
+router.get(controller.canRequest("read:session"), getHandler);
 
 export default router.handler(controller.errorHandlers);
 
@@ -18,6 +21,13 @@ async function getHandler(request, response) {
   controller.setSessionCookie(renewedSessionObject.token, response);
 
   const userFound = await user.findOneById(sessionObject.user_id);
+
+  if (!authorization.can(userFound, "read:session")) {
+    throw new ForbiddenError({
+      message: "Você não tem permissão.",
+      action: "Contate o suporte caso você acredite que isto seja um erro.",
+    });
+  }
 
   response.setHeader(
     "Cache-Control",
