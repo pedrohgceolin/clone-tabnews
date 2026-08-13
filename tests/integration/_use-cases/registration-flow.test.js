@@ -67,7 +67,6 @@ describe("Use case: Registration Flow (all successful)", () => {
   });
 
   test("Activate account", async () => {
-    console.log(tokenInEmail);
     const activationResponse = await fetch(
       `http://localhost:3000/api/v1/activations/${tokenInEmail}`,
       {
@@ -82,7 +81,11 @@ describe("Use case: Registration Flow (all successful)", () => {
     expect(Date.parse(activationResponseBody.used_at)).not.toBeNaN();
 
     const activatedUser = await user.findOneByUsername("RegistrationFlow");
-    expect(activatedUser.features).toEqual(["create:session", "read:session"]);
+    expect(activatedUser.features).toEqual([
+      "create:session",
+      "read:session",
+      "update:user",
+    ]);
   });
 
   test("Login", async () => {
