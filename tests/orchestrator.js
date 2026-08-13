@@ -1,6 +1,5 @@
 import retry from "async-retry";
 import { faker } from "@faker-js/faker";
-
 import database from "infra/database.js";
 import migrator from "models/migrator.js";
 import users from "models/users.js";
@@ -99,6 +98,12 @@ async function activateUser(inactiveUser) {
   return await activation.activateUserByUserId(inactiveUser.id);
 }
 
+async function addFeaturesToUser(userObject, features) {
+  const updatedUser = await users.addFeatures(userObject.id, features);
+
+  return updatedUser;
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -109,6 +114,7 @@ const orchestrator = {
   getLastEmail,
   extractActivationTokenFromEmail,
   activateUser,
+  addFeaturesToUser,
 };
 
 export default orchestrator;
