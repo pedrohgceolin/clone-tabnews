@@ -10,6 +10,15 @@ const defaultMigrationOptions = {
   migrationsTable: "pgmigrations",
 };
 
+const testMigrationOptions = {
+  dryRun: true,
+  count: 3,
+  dir: resolve("infra", "migration"),
+  direction: "up",
+  log: () => {},
+  migrationsTable: "pgmigrations",
+};
+
 async function listPendingMigrations() {
   let dbClient;
 
@@ -20,7 +29,6 @@ async function listPendingMigrations() {
       ...defaultMigrationOptions,
       dbClient,
     });
-
     return pendingMigrations;
   } finally {
     await dbClient?.end();
@@ -45,9 +53,28 @@ async function runPendingMigrations() {
   }
 }
 
+async function TestRunPendingMigrations() {
+  let dbClient;
+
+  try {
+    dbClient = await database.getNewClient();
+
+    const migratedMigrations = await migrationRunner({
+      ...testMigrationOptions,
+      dbClient,
+      dryRun: false,
+    });
+
+    return migratedMigrations;
+  } finally {
+    await dbClient?.end();
+  }
+}
+
 const migrator = {
   listPendingMigrations,
   runPendingMigrations,
+  TestRunPendingMigrations,
 };
 
 export default migrator;

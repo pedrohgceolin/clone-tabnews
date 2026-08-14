@@ -51,6 +51,10 @@ async function runPendingMigrations() {
   await migrator.runPendingMigrations();
 }
 
+async function authorizationTestRunPendingMigrations() {
+  await migrator.TestRunPendingMigrations();
+}
+
 async function createUser(userObject) {
   return await users.create({
     username:
@@ -115,6 +119,7 @@ const orchestrator = {
   extractActivationTokenFromEmail,
   activateUser,
   addFeaturesToUser,
+  authorizationTestRunPendingMigrations,
 };
 
 export default orchestrator;

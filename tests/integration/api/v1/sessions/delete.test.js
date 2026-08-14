@@ -12,7 +12,9 @@ beforeAll(async () => {
 describe("DELETE /api/v1/sessions", () => {
   describe("Default user", () => {
     test("With valid session", async () => {
-      const createdUser = await orchestrator.createUser({});
+      const createdUser = await orchestrator.createUser();
+
+      await orchestrator.activateUser(createdUser);
 
       const sessionObject = await orchestrator.createSession(createdUser.id);
 
