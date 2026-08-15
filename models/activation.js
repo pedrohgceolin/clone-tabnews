@@ -31,7 +31,7 @@ async function create(userId) {
 
 async function sendEmailToUser(user, activationToken) {
   await email.send({
-    from: "Five contato@five.com",
+    from: "Five contato@fivelancamentosdigitais.com.br",
     to: user.email,
     subject: "Ative seu cadastro na Five",
     text: `${user.username}, clique no link abaixo para ativar sua conta:
