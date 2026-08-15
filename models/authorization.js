@@ -128,7 +128,6 @@ function validateUser(user) {
 }
 
 function validateFeature(feature) {
-  console.log(feature);
   if (!feature || !availableFeatures.includes(feature)) {
     throw new InternalServerError({
       cause:
