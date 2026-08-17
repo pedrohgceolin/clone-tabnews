@@ -1,0 +1,38 @@
+exports.up = (pgm) => {
+  pgm.createTable("user_activation_tokens", {
+    id: {
+      type: "uuid",
+      primaryKey: true,
+      default: pgm.func("gen_random_uuid()"),
+    },
+
+    used_at: {
+      type: "timestamp",
+      default: null,
+    },
+
+    user_id: {
+      type: "uuid",
+      NotNull: true,
+    },
+
+    expires_at: {
+      type: "timestamptz",
+      notNull: true,
+    },
+
+    created_at: {
+      type: "timestamptz",
+      notNull: true,
+      default: pgm.func("timezone('utc',now())"),
+    },
+
+    updated_at: {
+      type: "timestamptz",
+      notNull: true,
+      default: pgm.func("timezone('utc',now())"),
+    },
+  });
+};
+
+exports.down = false;

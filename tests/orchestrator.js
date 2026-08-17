@@ -1,10 +1,10 @@
 import retry from "async-retry";
 import { faker } from "@faker-js/faker";
-
 import database from "infra/database.js";
 import migrator from "models/migrator.js";
 import users from "models/users.js";
 import session from "models/session.js";
+import activation from "models/activation.js";
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -51,12 +51,16 @@ async function runPendingMigrations() {
   await migrator.runPendingMigrations();
 }
 
+async function authorizationTestRunPendingMigrations() {
+  await migrator.TestRunPendingMigrations();
+}
+
 async function createUser(userObject) {
   return await users.create({
     username:
-      userObject.username || faker.internet.username().replace(/[_.-]/g, ""),
-    email: userObject.email || faker.internet.email(),
-    password: userObject.password || "validPassword",
+      userObject?.username || faker.internet.username().replace(/[_.-]/g, ""),
+    email: userObject?.email || faker.internet.email(),
+    password: userObject?.password || "validPassword",
   });
 }
 
@@ -75,12 +79,33 @@ async function getLastEmail() {
   const emailListBody = await emailListResponse.json();
   const lastEmailItem = emailListBody.pop();
 
+  if (!lastEmailItem) {
+    return null;
+  }
+
   const emailTextResponse = await fetch(
     `${emailHttpUrl}/messages/${lastEmailItem.id}.plain`,
   );
   const emailTextBody = await emailTextResponse.text();
   lastEmailItem.text = emailTextBody;
   return lastEmailItem;
+}
+
+function extractActivationTokenFromEmail(emailText) {
+  const TokenRegex = /\/cadastro\/ativar\/([a-fA-F0-9-]{36})/;
+  const match = emailText.match(TokenRegex);
+
+  return match ? match[1] : null;
+}
+
+async function activateUser(inactiveUser) {
+  return await activation.activateUserByUserId(inactiveUser.id);
+}
+
+async function addFeaturesToUser(userObject, features) {
+  const updatedUser = await users.addFeatures(userObject.id, features);
+
+  return updatedUser;
 }
 
 const orchestrator = {
@@ -91,6 +116,10 @@ const orchestrator = {
   createSession,
   deleteAllEmail,
   getLastEmail,
+  extractActivationTokenFromEmail,
+  activateUser,
+  addFeaturesToUser,
+  authorizationTestRunPendingMigrations,
 };
 
 export default orchestrator;
