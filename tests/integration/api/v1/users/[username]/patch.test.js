@@ -120,7 +120,13 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+
+      const userInDatabase = await user.findOneByEmail(
+        "uniqueemail2@gmail.com",
+      );
+      expect(userInDatabase.username).toBe(createdUser.username);
     });
+
     test("With new `password`", async () => {
       const createdUser = await orchestrator.createUser({
         password: "newpassword1",
@@ -175,6 +181,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(correctPasswordMatch).toBe(true);
       expect(incorrectPasswordMatch).toBe(false);
     });
+
     test("With duplicated `username`", async () => {
       await orchestrator.createUser({
         username: "user1",
@@ -211,6 +218,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         status_code: 400,
       });
     });
+
     test("With `user4` targeting `user3`", async () => {
       await orchestrator.createUser({
         username: "user3",
@@ -248,6 +256,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         status_code: 403,
       });
     });
+
     test("With duplicated `email`", async () => {
       await orchestrator.createUser({
         email: "email1@gmail.com",
@@ -287,6 +296,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         status_code: 400,
       });
     });
+
     test("With nonexistent `username`", async () => {
       const createdUser = await orchestrator.createUser([]);
       const activatedUser = await orchestrator.activateUser(createdUser);
