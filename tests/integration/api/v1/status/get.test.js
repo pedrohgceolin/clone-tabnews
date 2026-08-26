@@ -13,10 +13,12 @@ describe("GET /api/v1/status", () => {
 
       const responseBody = await response.json();
 
-      expect(responseBody).toEqual({
-        max_connections: 100,
-        used_connections: 1,
-      });
+      const parsedUpdatedAt = new Date(responseBody.updated_at).toISOString();
+      expect(responseBody.updated_at).toEqual(parsedUpdatedAt);
+
+      expect(responseBody.max_connections).toEqual(100);
+      expect(responseBody.used_connections).toEqual(1);
+      expect(responseBody).not.toHaveProperty("postgres_version");
     });
   });
 
@@ -37,10 +39,12 @@ describe("GET /api/v1/status", () => {
 
       const responseBody = await response.json();
 
-      expect(responseBody).toEqual({
-        max_connections: 100,
-        used_connections: 1,
-      });
+      const parsedUpdatedAt = new Date(responseBody.updated_at).toISOString();
+      expect(responseBody.updated_at).toEqual(parsedUpdatedAt);
+
+      expect(responseBody.max_connections).toEqual(100);
+      expect(responseBody.used_connections).toEqual(1);
+      expect(responseBody).not.toHaveProperty("postgres_version");
     });
   });
 
