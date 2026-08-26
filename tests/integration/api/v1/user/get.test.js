@@ -27,6 +27,7 @@ describe("GET /api/v1/user", () => {
       });
     });
   });
+
   describe("Default user", () => {
     test("With valid session", async () => {
       const createdUser = await orchestrator.createUser({
@@ -90,6 +91,7 @@ describe("GET /api/v1/user", () => {
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
       });
     });
     test("With nonexistent session", async () => {
@@ -239,6 +241,7 @@ describe("GET /api/v1/user", () => {
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
       });
     });
   });
