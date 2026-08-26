@@ -32,7 +32,7 @@ describe("POST /api/v1/migrations", () => {
       const defaultUser = await orchestrator.createUser();
       await orchestrator.activateUser(defaultUser);
 
-      const sessionObject = await orchestrator.createSession(defaultUser.id);
+      const sessionObject = await orchestrator.createSession(defaultUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
         method: "POST",
@@ -62,19 +62,16 @@ describe("POST /api/v1/migrations", () => {
       test("For the first time", async () => {
         privilegedUser = await orchestrator.createUser();
         await orchestrator.activateUser(privilegedUser);
-        sessionObject = await orchestrator.createSession(privilegedUser.id);
+        sessionObject = await orchestrator.createSession(privilegedUser);
         await orchestrator.addFeaturesToUser(privilegedUser, [
           "update:migrations",
         ]);
-        const response = await fetch(
-          `${webserver.origin}/api/v1/migrations`,
-          {
-            method: "POST",
-            headers: {
-              Cookie: `session_id=${sessionObject.token}`,
-            },
+        const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
+          method: "POST",
+          headers: {
+            Cookie: `session_id=${sessionObject.token}`,
           },
-        );
+        });
 
         expect(response.status).toBe(201);
 
@@ -85,15 +82,12 @@ describe("POST /api/v1/migrations", () => {
       });
 
       test("For the second time", async () => {
-        const response2 = await fetch(
-          `${webserver.origin}/api/v1/migrations`,
-          {
-            method: "POST",
-            headers: {
-              Cookie: `session_id=${sessionObject.token}`,
-            },
+        const response2 = await fetch(`${webserver.origin}/api/v1/migrations`, {
+          method: "POST",
+          headers: {
+            Cookie: `session_id=${sessionObject.token}`,
           },
-        );
+        });
         expect(response2.status).toBe(200);
 
         const response2Body = await response2.json();
