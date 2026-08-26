@@ -113,6 +113,7 @@ function filterOutput(user, feature, resource) {
       };
     }
     return {
+      updated_at: resource.updated_at,
       max_connections: resource.max_connections,
       used_connections: resource.used_connections,
     };
