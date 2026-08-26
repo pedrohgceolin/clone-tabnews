@@ -1,4 +1,5 @@
 import orchestrator from "tests/orchestrator.js";
+import webserver from "infra/webserver.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -7,15 +8,17 @@ beforeAll(async () => {
 describe("GET /api/v1/status", () => {
   describe("Anonymous user", () => {
     test("Retrieving current system status", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/status");
+      const response = await fetch(`${webserver.origin}/api/v1/status`);
       expect(response.status).toBe(200);
 
       const responseBody = await response.json();
 
-      expect(responseBody).toEqual({
-        max_connections: 100,
-        used_connections: 1,
-      });
+      const parsedUpdatedAt = new Date(responseBody.updated_at).toISOString();
+      expect(responseBody.updated_at).toEqual(parsedUpdatedAt);
+
+      expect(responseBody.max_connections).toEqual(100);
+      expect(responseBody.used_connections).toEqual(1);
+      expect(responseBody).not.toHaveProperty("postgres_version");
     });
   });
 
@@ -25,9 +28,9 @@ describe("GET /api/v1/status", () => {
 
       await orchestrator.activateUser(defaultUser);
 
-      const sessionObject = await orchestrator.createSession(defaultUser.id);
+      const sessionObject = await orchestrator.createSession(defaultUser);
 
-      const response = await fetch("http://localhost:3000/api/v1/status", {
+      const response = await fetch(`${webserver.origin}/api/v1/status`, {
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
         },
@@ -36,10 +39,12 @@ describe("GET /api/v1/status", () => {
 
       const responseBody = await response.json();
 
-      expect(responseBody).toEqual({
-        max_connections: 100,
-        used_connections: 1,
-      });
+      const parsedUpdatedAt = new Date(responseBody.updated_at).toISOString();
+      expect(responseBody.updated_at).toEqual(parsedUpdatedAt);
+
+      expect(responseBody.max_connections).toEqual(100);
+      expect(responseBody.used_connections).toEqual(1);
+      expect(responseBody).not.toHaveProperty("postgres_version");
     });
   });
 
@@ -49,13 +54,13 @@ describe("GET /api/v1/status", () => {
 
       await orchestrator.activateUser(privilegedUser);
 
-      const sessionObject = await orchestrator.createSession(privilegedUser.id);
+      const sessionObject = await orchestrator.createSession(privilegedUser);
 
       await orchestrator.addFeaturesToUser(privilegedUser, [
         "read:status:admin",
       ]);
 
-      const response = await fetch("http://localhost:3000/api/v1/status", {
+      const response = await fetch(`${webserver.origin}/api/v1/status`, {
         headers: {
           Cookie: `session_id=${sessionObject.token}`,
         },

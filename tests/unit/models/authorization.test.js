@@ -9,7 +9,7 @@ describe("models/authorization.js", () => {
       }).toThrow(InternalServerError);
     });
 
-    test("without `user.features", () => {
+    test("without `user.features`", () => {
       const createdUser = {
         username: "UserWithoutFeatures",
       };
@@ -44,7 +44,7 @@ describe("models/authorization.js", () => {
       }).toThrow(InternalServerError);
     });
 
-    test("without `user.features", () => {
+    test("without `user.features`", () => {
       const createdUser = {
         username: "UserWithoutFeatures",
       };
@@ -73,8 +73,8 @@ describe("models/authorization.js", () => {
         id: 1,
         features: ["read:user"],
         username: "resource",
-        created_at: "2026-0101T00:00:00.000Z",
-        updated_at: "2026-0101T00:00:00.000Z",
+        created_at: "2026-01-01T00:00:00.000Z",
+        updated_at: "2026-01-01T00:00:00.000Z",
         email: "resource@resource.com",
         password: "resource",
       };
@@ -89,8 +89,8 @@ describe("models/authorization.js", () => {
         id: 1,
         features: ["read:user"],
         username: "resource",
-        created_at: "2026-0101T00:00:00.000Z",
-        updated_at: "2026-0101T00:00:00.000Z",
+        created_at: "2026-01-01T00:00:00.000Z",
+        updated_at: "2026-01-01T00:00:00.000Z",
       });
     });
 

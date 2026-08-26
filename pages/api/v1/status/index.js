@@ -3,12 +3,10 @@ import database from "infra/database.js";
 import controller from "infra/controllers.js";
 import authorization from "models/authorization.js";
 
-const router = createRouter();
-
-router.use(controller.injectAnonymousOrUser);
-router.get(controller.canRequest("create:session"), getHandler);
-
-export default router.handler(controller.errorHandlers);
+export default createRouter()
+  .use(controller.injectAnonymousOrUser)
+  .get(controller.canRequest("create:session"), getHandler)
+  .handler(controller.errorHandlers);
 
 async function getHandler(request, response) {
   const userTryingToGet = request.context.user;
@@ -38,5 +36,5 @@ async function getHandler(request, response) {
     resource,
   );
 
-  response.status(200).json(secureOutputValues);
+  return response.status(200).json(secureOutputValues);
 }

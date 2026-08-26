@@ -7,7 +7,7 @@ function getOrigin() {
     return `https://${process.env.VERCEL_URL}`;
   }
 
-  return "http://five.com.br";
+  return "https://fivelancamentosdigitais.com.br";
 }
 
 const webserver = {
